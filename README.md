@@ -4,7 +4,7 @@ A package for handling varnings/locks when posts are opened by someone else.
 
 Installation:
 
-Install the package with LIP and make sure that you add the two csp:s.
+Install the package with LIP and make sure that you add the three csp:s.
 
 Add the following line of code in the ControlsHandler.Class_Initialize of your desire:
  
@@ -34,6 +34,8 @@ You can change the message through the localize posts that are related to the Op
 
 There is an option for blocking opening of posts that is already opened by someone. Change the value bBlockOnOpen to True in the OpenedBy.Message function.
 
+Finally, create a job that runs csp_clear_openedby nightly to clear records that have accidentally been left (ex. if Lime crashes)
+
 Limitations:
 
-Opened By is not set if you
+Opened By is not set if you use the ALT + Arrow to scroll through records.
