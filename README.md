@@ -4,18 +4,23 @@ A package for handling varnings/locks when posts are opened by someone else.
 
 Installation:
 
-Install the package with LIP and make sure that you add the three csp:s.
+Install the package with LIP and make sure that you add the three csp:s. Don't forget to run lsp_setdatabasetimestamp and restart LDC after.
 
 Add the following line of code in the ControlsHandler.Class_Initialize of your desire:
- 
+
+''' 
 Call OpenedBy.SetOpenedBy(m_controls.Record.ID, "<tablename>", 0)
+'''
 
-To delete the OpenedBy post you add the following line of code to the BeforeRecordChanged in the ControlsHandler of your desire:
+To delete the OpenedBy post you add the following line of code to the BeforeClose method in the InspectorHandler of your desire and to the BeforeRecordChanged in the ControlsHandler of your desire:
 
+'''
 Call OpenedBy.RemoveOpenedBy(m_Controls.Record.ID, m_Controls.Class.Name)
+'''
 
 The following code should be added to the ExplorerHandler.BeforeCommand of your choice (remember to check for the right class if you're using the GeneralExplorerHandler):
 
+'''
 'OpenedBy --------->
 If Command = lkCommandOpen Then
     Dim lUserId As Long
@@ -29,6 +34,7 @@ If Command = lkCommandOpen Then
     End If
 End If
 '<-------- OpenedBy
+'''
 
 You can change the message through the localize posts that are related to the OpenedBy package.
 
@@ -36,6 +42,4 @@ There is an option for blocking opening of posts that is already opened by someo
 
 Finally, create a job that runs csp_clear_openedby nightly to clear records that have accidentally been left (ex. if Lime crashes)
 
-Limitations:
 
-Opened By is not set if you use the ALT + Arrow to scroll through records.
