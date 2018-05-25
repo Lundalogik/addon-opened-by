@@ -1,5 +1,6 @@
 Attribute VB_Name = "OpenedBy"
 Option Explicit
+
 Public Function SetOpenedBy(recordid As Long, tableName As String, delete As Integer) As Boolean
     On Error GoTo ErrorHandler
     
@@ -17,16 +18,15 @@ Public Function SetOpenedBy(recordid As Long, tableName As String, delete As Int
     
     SetOpenedBy = False
     
-  
     Exit Function
 ErrorHandler:
     SetOpenedBy = True
     Call UI.ShowError("OpenedBy.SetOpenedBy")
 End Function
 
-
 Public Function IsOpenedBy(recordid As Long, tableName As String)
     On Error GoTo ErrorHandler
+    
     Dim oProc As New LDE.Procedure
         
     Set oProc = Database.Procedures.Lookup("csp_is_openedby", lkLookupProcedureByName)
@@ -41,18 +41,16 @@ Public Function IsOpenedBy(recordid As Long, tableName As String)
     Exit Function
 ErrorHandler:
     Call UI.ShowError("OpenedBy.IsOpenedBy")
-
 End Function
 
-
-'Public Sub RemoveOpenedBy(ByRef m_inspector As Lime.Inspector)
-Public Sub RemoveOpenedBy(record_id As Long, class_name As String)
+Public Sub RemoveOpenedBy(recordid As Long, tableName As String)
     On Error GoTo ErrorHandler
+    
     Dim delete As Integer
     delete = 1
     
-    'Call SetOpenedBy(m_inspector.Record.ID, m_inspector.Class.Name, delete)
-    Call SetOpenedBy(record_id, class_name, delete)
+    Call SetOpenedBy(recordid, tableName, delete)
+    
     Exit Sub
 ErrorHandler:
     Call UI.ShowError("OpenedBy.RemoveOpenedBy")
@@ -62,6 +60,7 @@ End Sub
 'Should be dynamic and customizable
 Public Function Message(sOpenedBy As String) As Boolean
     On Error GoTo ErrorHandler
+    
     'Settings
     Dim bBlockOnOpen As Boolean: bBlockOnOpen = False
     'Change this if you want Lime to block locked posts
