@@ -4,48 +4,47 @@ A package for handling varnings/locks when posts are opened by someone else.
 
 Installation:
 
-Install the package with LIP and make sure that you add the three csp:s. Don't forget to run lsp_setdatabasetimestamp and restart LDC after.
+Install the package with LIP.
 
 Add the following line of code in the ControlsHandler.Class_Initialize of your desire:
 
 ```
-Call OpenedBy.SetOpenedBy(m_controls.Record.ID, "<tablename>", 0)
+Call OpenedBy.SetAsOpenedBy(CStr(Application.ActiveUser.ID), CStr(m_Controls.Record.ID), m_Controls.Class.name, Application.ActiveUser.name)
 ```
 
 To delete the OpenedBy post you add the following line of code to the BeforeClose method in the InspectorHandler of your desire and to the BeforeRecordChanged in the ControlsHandler of your desire:
 
 ControlsHandler.BeforeRecordChanged:
 ```
-Call OpenedBy.RemoveOpenedBy(m_Controls.Record.ID, m_Controls.Class.Name)
+Call OpenedBy.DeleteOpenedByRecord(CStr(Application.ActiveUser.ID), CStr(m_Controls.Record.ID), m_Controls.Class.name)
 ```
 
 InspectorHandler.BeforeClose:
 ```
-Call OpenedBy.RemoveOpenedBy(m_inspector.Record.ID, m_inspector.Class.Name)
+Call OpenedBy.DeleteOpenedByRecord(CStr(Application.ActiveUser.ID), CStr(m_Inspector.Record.ID), m_Inspector.Class.name)
 ```
 
 The following code should be added to the ExplorerHandler.BeforeCommand of your choice (remember to check for the right class if you're using the GeneralExplorerHandler):
 
 ```
 'OpenedBy --------->
-If Command = lkCommandOpen Then
-    Dim lUserId As Long
-    Dim sOpenedBy As String
-        
-    If Not ActiveUser Is Nothing Then    
-        sOpenedBy = OpenedBy.IsOpenedBy(m_Explorer.ActiveItem.ID, "<tablename>")
-        If sOpenedBy <> "" Then
-            Cancel = OpenedBy.Message(sOpenedBy)
+    If Command = lkCommandOpen Then
+        Dim lUserId As Long
+        If Not ActiveUser Is Nothing Then
+            'Added YYYY-MM-DD addon-opened-by
+            Cancel = OpenedBy.AvailableCheck(CStr(Application.ActiveUser.ID), CStr(m_Explorer.ActiveItem.ID), "<tablename>")
         End If
     End If
-End If
 '<-------- OpenedBy
 ```
 
-You can change the message through the localize posts that are related to the OpenedBy package.
+You can change the message through the localize posts that are related to the OpenedBy package:
+- i_openedbymessage
+- i_openedbymessage2
+- i_blockedopenedby
 
-There is an option for blocking opening of posts that is already opened by someone. Change the value bBlockOnOpen to True in the OpenedBy.Message function.
 
-Finally, create a job that runs csp_clear_openedby nightly to clear records that have accidentally been left (ex. if Lime crashes)
+There is an option for blocking opening of posts that is already opened by someone. Change the value bBlockOnOpen to True at the top of the OpenedBy module. There you also need to specify the API url. 
 
+Finally, instruct the superuser that if Lime crashes and records are locked even though there are no users using the record, they have to manually delete the post in the "openedby"-table.
 

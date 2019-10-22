@@ -1,107 +1,117 @@
 Attribute VB_Name = "OpenedBy"
 Option Explicit
 
-Public Function SetOpenedBy(recordid As Long, tableName As String, delete As Integer) As Boolean
+'Settings
+'Change this if you want Lime to block locked posts
+Const bBlockOnOpen As Boolean = False
+'Change this according to your api adress
+Const urlbase As String = "https://localhost/lime_testing/api/v1/limeobject/openedby/"
+
+
+
+Function AvailableCheck(userid As String, recordid As String, tablename As String) As Boolean
     On Error GoTo ErrorHandler
     
-    Dim oProc As New LDE.Procedure
-    Dim oResults As Integer
+    Dim xmlhttp As New MSXML2.XMLHTTP60
+    Dim myurl As String
+    Dim oJson As Object
+    Dim embedded As Object
+    Dim iAnswer As Integer
+    Dim openedByUser As String
     
-    Set oProc = Database.Procedures.Lookup("csp_set_openedby", lkLookupProcedureByName)
+    'Use the REST API to see if someone has opened the record already
+    myurl = urlbase + "?recordid=" + recordid
+    xmlhttp.Open "GET", myurl, False
+    xmlhttp.setRequestHeader "Content-Type", "application/json"
+    xmlhttp.setRequestHeader "sessionid", Application.Database.SessionID
+    xmlhttp.Send
+    
+    'Count the number of userids that have opened the record
+    Set oJson = JSON.parse(xmlhttp.responseText)
+    Set embedded = oJson("_embedded")
 
-    oProc.Parameters("@@iduser").InputValue = ActiveUser.ID
-    oProc.Parameters("@@idrecord").InputValue = recordid
-    oProc.Parameters("@@delete").InputValue = delete
-    oProc.Parameters("@@tablename").InputValue = tableName
-    
-    Call oProc.Execute(False)
-    
-    SetOpenedBy = False
-    
+    If embedded("limeobjects").Count <> 0 Then
+        'If record already is opened then block or allow the userid to proceed
+        openedByUser = embedded("limeobjects")(1)("name")
+        If Not bBlockOnOpen Then
+            iAnswer = Lime.MessageBox(Localize.GetText("OpenedBy", "i_openedbymessage") & " " & openedByUser & Localize.GetText("OpenedBy", "i_openedbymessage2"), VBA.vbYesNo + VBA.vbQuestion + vbDefaultButton2)
+            If iAnswer = vbYes Then
+                AvailableCheck = False
+            Else
+                AvailableCheck = True
+            End If
+        Else
+            Call Lime.MessageBox(Localize.GetText("OpenedBy", "i_blockedopenedby") & " " & openedByUser, vbOKOnly + vbExclamation)
+            AvailableCheck = True
+        End If
+    Else
+        AvailableCheck = False
+    End If
+
     Exit Function
 ErrorHandler:
-    SetOpenedBy = True
-    Call UI.ShowError("OpenedBy.SetOpenedBy")
+    AvailableCheck = True
+    Call LC_UI.ShowError("OpenedBy.AvailableCheck")
 End Function
 
-Public Function IsOpenedBy(recordid As Long, tableName As String)
+Sub SetAsOpenedBy(userid As String, recordid As String, tablename As String, username As String)
     On Error GoTo ErrorHandler
     
-    Dim oProc As New LDE.Procedure
-        
-    Set oProc = Database.Procedures.Lookup("csp_is_openedby", lkLookupProcedureByName)
+    Dim xmlhttp As New MSXML2.XMLHTTP60
+    Dim oBody As New Scripting.Dictionary
     
-    oProc.Parameters("@@idrecord").InputValue = recordid
-    oProc.Parameters("@@tablename").InputValue = tableName
-    
-    Call oProc.Execute(False)
-    
-    IsOpenedBy = IIf(IsNull(oProc.Parameters("@@openedby").OutputValue), "", oProc.Parameters("@@openedby").OutputValue)
-    
-    Exit Function
-ErrorHandler:
-    Call UI.ShowError("OpenedBy.IsOpenedBy")
-End Function
-
-Public Sub RemoveOpenedBy(recordid As Long, tableName As String)
-    On Error GoTo ErrorHandler
-    
-    Dim delete As Integer
-    delete = 1
-    
-    Call SetOpenedBy(recordid, tableName, delete)
+    'REST API POST CALL
+    xmlhttp.Open "POST", urlbase, False
+    xmlhttp.setRequestHeader "Content-Type", "application/json"
+    xmlhttp.setRequestHeader "sessionid", Application.Database.SessionID
+    oBody.Add "userid", userid
+    oBody.Add "recordid", recordid
+    oBody.Add "tablename", tablename
+    oBody.Add "name", username
+    xmlhttp.Send JsonConverter.ConvertToJson(oBody)
     
     Exit Sub
 ErrorHandler:
-    Call UI.ShowError("OpenedBy.RemoveOpenedBy")
+    Call LC_UI.ShowError("OpenedBy.SetAsOpenedBy")
 End Sub
 
-'Called when a ticket is opened by someone.
-'Should be dynamic and customizable
-Public Function Message(sOpenedBy As String) As Boolean
+Sub DeleteOpenedByRecord(userid As String, recordid As String, tablename As String)
     On Error GoTo ErrorHandler
     
     'Settings
-    Dim bBlockOnOpen As Boolean: bBlockOnOpen = False
-    'Change this if you want Lime to block locked posts
+    Dim xmlhttp As New MSXML2.XMLHTTP60
+    Dim geturl As String
+    Dim deleteurl As String
+    Dim ID As String
+    Dim limeobjects As Collection
+    Dim embedded As Object
+    Dim oJson As Object
     
-    Dim sOpenedByMessage As String
-    Dim vOpenedBy As Variant
-    Dim vIdUser As Variant
-    Dim bOpenedByYou As Boolean
+    'REST API GET idopenedby from tablename
+    geturl = urlbase & "?recordid=" & recordid & "&userid=" & userid & "&tablename=" & tablename
+    xmlhttp.Open "GET", geturl, False
+    xmlhttp.setRequestHeader "Content-Type", "application/json"
+    xmlhttp.setRequestHeader "sessionid", Application.Database.SessionID
+    xmlhttp.Send
     
-    vOpenedBy = Split(sOpenedBy, ";")
-    For Each vIdUser In vOpenedBy
-        If vIdUser <> "" Then
-            If vIdUser <> CStr(ActiveUser.ID) Then
-                If sOpenedByMessage <> "" Then
-                    sOpenedByMessage = sOpenedByMessage + ", " + Database.Users.Lookup(vIdUser, lkLookupUserByID).Name
-                Else
-                    sOpenedByMessage = sOpenedByMessage + Database.Users.Lookup(vIdUser, lkLookupUserByID).Name
-                End If
-            Else
-                bOpenedByYou = True
-            End If
-        End If
-    Next
+    'REST API DELETE if idopenedby found
+    Set oJson = JSON.parse(xmlhttp.responseText)
+    Set embedded = oJson("_embedded")
+    If embedded("limeobjects").Count > 0 Then
+        Set limeobjects = embedded("limeobjects")
+        ID = CStr(limeobjects(1)("_id"))
     
-    If Not bOpenedByYou Then
-        If Not bBlockOnOpen Then
-            Dim iAnswer As Integer
-            iAnswer = Lime.MessageBox(Localize.GetText("OpenedBy", "i_openedbymessage"), VBA.vbYesNo + VBA.vbQuestion + vbDefaultButton2, sOpenedByMessage)
-            If iAnswer = vbYes Then
-                Message = False
-            Else
-                Message = True
-            End If
-        Else
-            Call Lime.MessageBox(Localize.GetText("OpenedBy", "i_blockedopenedby"), vbOKOnly + vbExclamation, sOpenedByMessage)
-            Message = True
-        End If
+        deleteurl = urlbase & ID & "/"
+        xmlhttp.Open "DELETE", deleteurl, False
+        xmlhttp.setRequestHeader "Content-Type", "application/json"
+        xmlhttp.setRequestHeader "sessionid", Application.Database.SessionID
+        xmlhttp.Send
     End If
-            
-    Exit Function
+    
+    Exit Sub
 ErrorHandler:
-    Message = False
-    Call UI.ShowError("OpenedBy.Message")
-End Function
+    Call LC_UI.ShowError("OpenedBy.DeleteOpenedByRecord")
+End Sub
+
+
+
