@@ -1,22 +1,30 @@
-# package-opened-by
+# limepkg-opened-by
 
-A package for handling varnings/locks when posts are opened by someone else.
+An add-on for handling varnings/locks when records are opened by someone else. OpenedBy uses REST-api calls to create OpenedBy records which also is queried upon opening records of a certain type. 
+
+Only works in the desktop client. 
+
+Is cloud compatible.
 
 Installation:
 
-Install the package with LIP and make sure that you add the three csp:s. Don't forget to run lsp_setdatabasetimestamp and restart LDC after.
+Install the package with LIP. A VBA .bas file will be installed as well as a new table called OpenedBy along with some localization records.
 
 Add the following line of code in the ControlsHandler.Class_Initialize of your desire:
 
 ```
-Call OpenedBy.SetOpenedBy(m_controls.Record.ID, "<tablename>", 0)
+Call OpenedBy.SetOpenedBy(m_controls.Record.ID, "<tablename>")
 ```
 
 To delete the OpenedBy post you add the following line of code to the BeforeClose method in the InspectorHandler of your desire and to the BeforeRecordChanged in the ControlsHandler of your desire:
 
 ControlsHandler.BeforeRecordChanged:
 ```
-Call OpenedBy.RemoveOpenedBy(m_Controls.Record.ID, m_Controls.Class.Name)
+'Opened By
+If Not m_inspector Is Nothing Then
+    Call OpenedBy.RemoveOpenedBy(m_Controls.Record.ID, m_Controls.Class.Name)
+End If
+
 ```
 
 InspectorHandler.BeforeClose:
@@ -28,24 +36,27 @@ The following code should be added to the ExplorerHandler.BeforeCommand of your 
 
 ```
 'OpenedBy --------->
-If Command = lkCommandOpen Then
-    Dim lUserId As Long
-    Dim sOpenedBy As String
-        
-    If Not ActiveUser Is Nothing Then    
-        sOpenedBy = OpenedBy.IsOpenedBy(m_Explorer.ActiveItem.ID, "<tablename>")
-        If sOpenedBy <> "" Then
-            Cancel = OpenedBy.Message(sOpenedBy)
-        End If
+If Command = lkCommandOpen Then        
+    If Not ActiveUser Is Nothing Then
+        Cancel = OpenedBy.IsOpenedBy(m_explorer.ActiveItem.ID, "sos")
     End If
 End If
 '<-------- OpenedBy
 ```
 
+Finally you need to change the url for the REST-api which is defined in the General.Declarations of the OpenedBy.bas in VBA. There you can also choose if you want to block others from opening records that already are open.
+```
+'Change this if you want Lime to block locked posts
+Const bBlockOnOpen As Boolean = False
+'Change this according to your api adress
+Const sUrlBase As String = "https://<server_name>/<app_name>/api/v1/limeobject/openedby/"
+```
 You can change the message through the localize posts that are related to the OpenedBy package.
 
-There is an option for blocking opening of posts that is already opened by someone. Change the value bBlockOnOpen to True in the OpenedBy.Message function.
+If on premise, to clean up OpenedBy records that have accidentally been left behind (ex. if Lime crashes), create a job that clears records in OpenedBy table nightly . 
 
-Finally, create a job that runs csp_clear_openedby nightly to clear records that have accidentally been left (ex. if Lime crashes)
+In Cloud this is not possible so there is a VBA method which clears OpenedBy records that are older than a day (this is a setting in the OpenedBy module). 
+
+The OpenedBy table should also be visible for administrators (it is by default) so that they can remove records manually if needed.
 
 

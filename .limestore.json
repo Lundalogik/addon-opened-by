@@ -1,0 +1,22 @@
+{
+    "add-ons": [
+        {
+            "uniqueName": "openedby",
+            "displayName": "Opened By",
+            "description": "Allows you to notify or block opening of records that are already opened by someone else.",
+            "cloudCompatible": true,
+            "webClientSupported": false,
+            "desktopClientSupported": true,
+            "thumbnailImage": "resources/openedby.png",
+            "images": [
+                "resources/openedby.png"
+            ],
+            "info": "resources/limestore.md"
+        }
+    ],
+    "tags": [
+        "sales",
+        "utility",
+        "gdpr"
+    ]
+}
