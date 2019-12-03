@@ -38,7 +38,7 @@ The following code should be added to the ExplorerHandler.BeforeCommand of your 
 'OpenedBy --------->
 If Command = lkCommandOpen Then        
     If Not ActiveUser Is Nothing Then
-        Cancel = OpenedBy.IsOpenedBy(m_explorer.ActiveItem.ID, "sos")
+        Cancel = OpenedBy.IsOpenedBy(m_explorer.ActiveItem.ID, "<tablename>")
     End If
 End If
 '<-------- OpenedBy
