@@ -55,7 +55,7 @@ You can change the message through the localize posts that are related to the Op
 
 If on premise, to clean up OpenedBy records that have accidentally been left behind (ex. if Lime crashes), create a job that clears records in OpenedBy table nightly . 
 
-In Cloud this is not possible so there is a VBA method which clears OpenedBy records that are older than a day (this is a setting in the OpenedBy module). 
+In Cloud this is not possible so there is a VBA method, CleanUpExpired, which clears OpenedBy records that are older than a day (this is a setting in the OpenedBy module). Add a call to the method in the ThisApplication method which suits best for it.  
 
 The OpenedBy table should also be visible for administrators (it is by default) so that they can remove records manually if needed.
 
