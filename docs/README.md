@@ -1,4 +1,4 @@
-# addon-helpdesk-statistics - Documentation
+# Opened By - Documentation
 
 ## The docs
 Seeing this file you have successfully generated a documentation template for your Lime Plug or Solution. Great job!
