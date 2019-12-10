@@ -1,0 +1,36 @@
+site_name: addon-helpdesk-statistics
+nav:
+  - 'Docs':
+    - 'Overview': 'index.md'
+    - 'Requirements': 'requirements.md'
+    - 'How it Works': 'howitworks.md'
+    - 'Installation': 'installation.md'
+    - 'Configuration': 'configuration.md'
+    - 'Upgrading': 'upgrading.md'
+    - 'Technical': 'technical.md'
+    - 'Troubleshooting': 'troubleshooting.md'
+    - 'GDPR': 'gdpr.md'
+  - 'Changelog':
+    - 'Changelog': 'changelog.md'
+theme:
+  name: 'material'
+  logo:
+    icon: 'home'
+  feature:
+    tabs: true
+  palette:
+    primary: 'teal'
+    accent: 'teal'
+  favicon: 'images/favicon.ico'
+repo_url: https://github.com/Lundalogik/addon-opened-by
+site_description: Opened By Documentation
+site_author: Lime Technologies AB
+docs_dir: docs
+dev_addr: localhost:3002
+markdown_extensions:
+- codehilite
+- admonition
+- meta
+- footnotes
+- toc:
+    permalink: true
