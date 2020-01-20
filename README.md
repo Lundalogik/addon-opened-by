@@ -18,7 +18,7 @@ Call OpenedBy.SetOpenedBy(m_controls.Record.ID, "<tablename>")
 
 To delete the OpenedBy post you add the following line of code to the BeforeClose method in the InspectorHandler of your desire and to the BeforeRecordChanged in the ControlsHandler of your desire:
 
-ControlsHandler.BeforeRecordChanged:
+ControlsHandler.m_controls.BeforeRecordChanged:
 ```
 'Opened By
 If Not m_inspector Is Nothing Then
