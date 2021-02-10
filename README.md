@@ -6,7 +6,51 @@ Only works in the desktop client.
 
 Is cloud compatible.
 
-Installation:
+## Prerequisites
+To make OpenedBy work properly the handling of GeneralInspectorHandler and HelpdeskInspectorHandler(or ) need to be written in a certain manner. Use the following example as guide:
+
+GeneralInspectorHandler:
+```
+Private Sub m_Application_AfterActiveInspectorChanged()
+    On Error GoTo ErrorHandler
+    If Not m_Application.ActiveInspector Is Nothing Then
+        Set m_Inspector = m_Application.ActiveInspector
+        
+        Select Case m_Inspector.Class.Name
+            Case "sos":
+                Const tagName As String = "SOSInspector_Listener"
+                If Not m_Inspector Is Nothing Then
+                    If Not IsObject(m_Inspector.Tag(tagName)) Then
+                        Dim sosListener As New SOSInspectorHandler
+                        'Set m_SOSInspectorHandler = New SOSInspectorHandler
+                        Call sosListener.Connect(m_Inspector, tagName)
+                        DebugPrint "m_SOSInspectorHandler " & m_Inspector.Caption
+                    End If
+                End If
+        End Select
+    End If
+```
+
+SOSInspectorHandler:
+```
+Private Sub m_Inspector_AfterClose()
+    Disconnect
+End Sub
+
+Public Sub Connect(limeinspector As Lime.Inspector, tagName As String)
+    m_tagName = tagName
+    Set m_Inspector = limeinspector
+    m_Inspector.Tag(m_tagName) = Me
+End Sub
+
+Public Sub Disconnect()
+    If Not m_Inspector Is Nothing Then
+        m_Inspector.Tag(m_tagName) = Nothing
+        Set m_Inspector = Nothing
+    End If
+End Sub
+```
+## Installation
 
 Install the package with LIP. A VBA .bas file will be installed as well as a new table called OpenedBy along with some localization records.
 
@@ -53,7 +97,11 @@ Const sUrlBase As String = "https://<server_name>/<app_name>/api/v1/limeobject/o
 ```
 You can change the message through the localize posts that are related to the OpenedBy package.
 
-If on premise, to clean up OpenedBy records that have accidentally been left behind (ex. if Lime crashes), create a job that clears records in OpenedBy table nightly . 
+If on premise, to clean up OpenedBy records that have accidentally been left behind (ex. if Lime crashes), add the ```csp_clear_opened_by``` stored procedure under /sql folder, and add a job that runs it in the SQL Server Agent. Schedule it to run nightly. There is an example also under /sql folder. Enter needed changes:
+
+* ```<ENTER NAME OF AGENT JOB HERE>```
+* ```<USER RUNNING THE JOB>```
+* ```<ENTER DATABASE NAME HERE>```
 
 In Cloud this is not possible so there is a VBA method, CleanUpExpired, which clears OpenedBy records that are older than a day (this is a setting in the OpenedBy module). Add a call to the method in the ThisApplication method which suits best for it.  
 
