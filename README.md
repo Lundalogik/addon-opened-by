@@ -17,21 +17,20 @@ Private Sub m_Application_AfterActiveInspectorChanged()
         Set m_Inspector = m_Application.ActiveInspector
         
         Select Case m_Inspector.Class.Name
-            Case "sos":
-                Const tagName As String = "SOSInspector_Listener"
+            Case "helpdesk":
+                Const tagName As String = "HelpdeskInspector_Listener"
                 If Not m_Inspector Is Nothing Then
                     If Not IsObject(m_Inspector.Tag(tagName)) Then
-                        Dim sosListener As New SOSInspectorHandler
-                        'Set m_SOSInspectorHandler = New SOSInspectorHandler
-                        Call sosListener.Connect(m_Inspector, tagName)
-                        DebugPrint "m_SOSInspectorHandler " & m_Inspector.Caption
+                        Dim helpdeskListener As New HelpdeskInspectorHandler
+                        HelpdeskInspectorHandler
+                        Call helpdeskListener.Connect(m_Inspector, tagName)                        
                     End If
                 End If
         End Select
     End If
 ```
 
-SOSInspectorHandler:
+HelpdeskInspectorHandler:
 ```
 Private Sub m_Inspector_AfterClose()
     Disconnect
