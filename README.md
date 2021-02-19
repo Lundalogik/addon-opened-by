@@ -22,7 +22,6 @@ Private Sub m_Application_AfterActiveInspectorChanged()
                 If Not m_Inspector Is Nothing Then
                     If Not IsObject(m_Inspector.Tag(tagName)) Then
                         Dim helpdeskListener As New HelpdeskInspectorHandler
-                        HelpdeskInspectorHandler
                         Call helpdeskListener.Connect(m_Inspector, tagName)                        
                     End If
                 End If
