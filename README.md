@@ -1,13 +1,13 @@
 # addon-opened-by
 
-An add-on for handling varnings/locks when records are opened by someone else. OpenedBy uses REST-api calls to create OpenedBy records which also is queried upon opening records of a certain type. 
+An add-on for handling warnings/locks when records are opened by someone else. OpenedBy uses REST-api calls to create OpenedBy records which also is queried upon opening records of a certain type. 
 
 Only works in the desktop client. 
 
 Is cloud compatible.
 
 ## Prerequisites
-To make OpenedBy work properly the handling of GeneralInspectorHandler and HelpdeskInspectorHandler(or ) need to be written in a certain manner. Use the following example as guide:
+To make OpenedBy work properly the handling of GeneralInspectorHandler and HelpdeskInspectorHandler(or) these need to be written in a certain manner. Use the following example as guide:
 
 GeneralInspectorHandler:
 ```
