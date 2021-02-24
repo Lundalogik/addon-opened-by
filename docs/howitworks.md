@@ -1,9 +1,9 @@
-hero: *Short and snappy description of the value the add-on brings. Use same text for all .md files.*
+hero: Get a warning when trying to open a card that someone else already has open.
 
 # How it Works
 
-An add-on for handling varnings/locks when records are opened by someone else. OpenedBy uses REST-api calls to create OpenedBy records which also is queried upon opening records of a certain type. 
+OpenedBy uses the REST-api to create OpenedBy records to keep track of which records that are open and who has them open. 
 
-Only works in the desktop client. 
+Before a record of a limetype that is tracked by OpenedBy, is opened. OpenedBy queries the OpenedBy table to see if someone else has that record open and if that is the case you either get a warning or a message saying that the record is locked (depends of your config).
 
-Is cloud compatible.
+OpenedBy only works in the desktop client. 

@@ -1,4 +1,4 @@
-site_name: addon-helpdesk-statistics
+site_name: addon-opened-by
 nav:
   - 'Docs':
     - 'Overview': 'index.md'

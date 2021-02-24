@@ -1,4 +1,4 @@
-hero: *Short and snappy description of the value the add-on brings. Use same text for all .md files.*
+hero: Get a warning when trying to open a card that someone else already has open.
 
 # Upgrading an Existing Installation
 
