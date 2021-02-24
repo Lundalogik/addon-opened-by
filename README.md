@@ -55,7 +55,7 @@ Install the package with LIP. A VBA .bas file will be installed as well as a new
 Add the following line of code in the ControlsHandler.Class_Initialize of your desire:
 
 ```
-Call OpenedBy.SetOpenedBy(m_controls.Record.ID, "<tablename>")
+Call AO_OpenedBy.SetOpenedBy(m_controls.Record.ID, "<tablename>")
 ```
 
 To delete the OpenedBy post you add the following line of code to the BeforeClose method in the InspectorHandler of your desire and to the BeforeRecordChanged in the ControlsHandler of your desire:
@@ -64,14 +64,14 @@ ControlsHandler.m_controls.BeforeRecordChanged:
 ```
 'Opened By
 If Not m_inspector Is Nothing Then
-    Call OpenedBy.RemoveOpenedBy(m_Controls.Record.ID, m_Controls.Class.Name)
+    Call AO_OpenedBy.RemoveOpenedBy(m_Controls.Record.ID, m_Controls.Class.Name)
 End If
 
 ```
 
 InspectorHandler.BeforeClose:
 ```
-Call OpenedBy.RemoveOpenedBy(m_inspector.Record.ID, m_inspector.Class.Name)
+Call AO_OpenedBy.RemoveOpenedBy(m_inspector.Record.ID, m_inspector.Class.Name)
 ```
 
 The following code should be added to the ExplorerHandler.BeforeCommand of your choice (remember to check for the right class if you're using the GeneralExplorerHandler):
@@ -80,13 +80,13 @@ The following code should be added to the ExplorerHandler.BeforeCommand of your 
 'OpenedBy --------->
 If Command = lkCommandOpen Then        
     If Not ActiveUser Is Nothing Then
-        Cancel = OpenedBy.IsOpenedBy(m_explorer.ActiveItem.ID, "<tablename>")
+        Cancel = AO_OpenedBy.IsOpenedBy(m_explorer.ActiveItem.ID, "<tablename>")
     End If
 End If
 '<-------- OpenedBy
 ```
 
-Finally you need to change the url for the REST-api which is defined in the General.Declarations of the OpenedBy.bas in VBA. There you can also choose if you want to block others from opening records that already are open.
+Finally you need to change the url for the REST-api which is defined in the General.Declarations of the AO_OpenedBy.bas in VBA. There you can also choose if you want to block others from opening records that already are open.
 ```
 'Change this if you want Lime to block locked posts
 Const bBlockOnOpen As Boolean = False
@@ -101,7 +101,7 @@ If on premise, to clean up OpenedBy records that have accidentally been left beh
 * ```<USER RUNNING THE JOB>```
 * ```<ENTER DATABASE NAME HERE>```
 
-In Cloud this is not possible so there is a VBA method, CleanUpExpired, which clears OpenedBy records that are older than a day (this is a setting in the OpenedBy module). Add a call to the method in the ThisApplication method which suits best for it.  
+In Cloud this is not possible so there is a VBA method, CleanUpExpired, which clears OpenedBy records that are older than a day (this is a setting in the AO_OpenedBy module). Add a call to the method in the ThisApplication method which suits best for it.  
 
 The OpenedBy table should also be visible for administrators (it is by default) so that they can remove records manually if needed.
 
