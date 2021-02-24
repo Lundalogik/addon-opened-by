@@ -95,7 +95,7 @@ Const sUrlBase As String = "https://<server_name>/<app_name>/api/v1/limeobject/o
 ```
 You can change the message through the localize posts that are related to the OpenedBy package.
 
-If on premise, to clean up OpenedBy records that have accidentally been left behind (ex. if Lime crashes), add the ```csp_clear_opened_by``` stored procedure under /sql folder, and add a job that runs it in the SQL Server Agent. Schedule it to run nightly. There is an example also under /sql folder. Enter needed changes:
+If on premise, to clean up OpenedBy records that have accidentally been left behind (ex. if Lime crashes), add the ```csp_addon_openedby_clear_opened_by``` stored procedure under /sql folder, and add a job that runs it in the SQL Server Agent. Schedule it to run nightly. There is an example also under /sql folder. Enter needed changes:
 
 * ```<ENTER NAME OF AGENT JOB HERE>```
 * ```<USER RUNNING THE JOB>```
