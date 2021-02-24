@@ -26,7 +26,7 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'<ENTER NAME OF AGENT JOB HER
 		@owner_login_name=N'<user for running the job>', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 /****** Object:  Step [Run csp_clear_openedby]    Script Date: 2021-02-09 16:07:35 ******/
-EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Run csp_clear_openedby', 
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Run csp_addon_openedby_clear_openedby', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 
 		@on_success_action=1, 
