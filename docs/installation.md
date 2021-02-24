@@ -50,9 +50,10 @@ Public Sub Disconnect()
 End Sub
 ```
 ## Installation
-
+#### LIP
 Install the package with LIP. A VBA .bas file will be installed as well as a new table called OpenedBy along with some localization records.
 
+#### Manually add VBA
 Add the following line of code in the ControlsHandler.Class_Initialize of your desire:
 
 ```
