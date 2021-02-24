@@ -1,4 +1,4 @@
-Attribute VB_Name = "OpenedBy"
+Attribute VB_Name = "AO_OpenedBy"
 Option Explicit
 'Settings
 'Change this if you want Lime to block locked posts
@@ -71,7 +71,7 @@ Function IsOpenedBy(sRecordId As String, sTableName As String) As Boolean
             If bIsOpenedByOther Then
                 'If record already is opened then block or allow the iduser to proceed
                 If Not bBlockOnOpen Then
-                    iAnswer = Lime.MessageBox(Localize.GetText("OpenedBy", "i_openedbymessage"), VBA.vbYesNo + VBA.vbQuestion + vbDefaultButton2, sOpenedByUser)
+                    iAnswer = Lime.MessageBox(Localize.GetText("AO_OpenedBy", "i_openedbymessage"), VBA.vbYesNo + VBA.vbQuestion + vbDefaultButton2, sOpenedByUser)
                     If iAnswer = vbYes Then
                         bCancelOpen = False
                         IsOpenedBy = bCancelOpen
@@ -80,7 +80,7 @@ Function IsOpenedBy(sRecordId As String, sTableName As String) As Boolean
                         IsOpenedBy = bCancelOpen
                     End If
                 Else
-                    Call Lime.MessageBox(Localize.GetText("OpenedBy", "i_blockedopenedby"), vbOKOnly + vbExclamation, sOpenedByUser)
+                    Call Lime.MessageBox(Localize.GetText("AO_OpenedBy", "i_blockedopenedby"), vbOKOnly + vbExclamation, sOpenedByUser)
                     bCancelOpen = True
                     IsOpenedBy = bCancelOpen
                 End If
@@ -91,7 +91,7 @@ Function IsOpenedBy(sRecordId As String, sTableName As String) As Boolean
     Exit Function
 errorhandler:
     IsOpenedBy = True
-    Call LC_UI.ShowError("OpenedBy.IsOpenedBy")
+    Call LC_UI.ShowError("AO_OpenedBy.IsOpenedBy")
 End Function
 
 Sub SetOpenedBy(sRecordId As String, sTableName As String)
@@ -109,7 +109,7 @@ Sub SetOpenedBy(sRecordId As String, sTableName As String)
     
     Exit Sub
 errorhandler:
-    Call LC_UI.ShowError("OpenedBy.SetAsOpenedBy")
+    Call LC_UI.ShowError("AO_OpenedBy.SetAsOpenedBy")
 End Sub
 
 Sub RemoveOpenedBy(sRecordId As String, sTableName As String)
@@ -147,7 +147,7 @@ Sub RemoveOpenedBy(sRecordId As String, sTableName As String)
     
     Exit Sub
 errorhandler:
-    Call LC_UI.ShowError("OpenedBy.RemoveOpenedBy")
+    Call LC_UI.ShowError("AO_OpenedBy.RemoveOpenedBy")
 End Sub
 
 Function XmlHttpSend(sMethod As String, sUrl As String, payload As Scripting.Dictionary) As String
@@ -174,5 +174,5 @@ Function XmlHttpSend(sMethod As String, sUrl As String, payload As Scripting.Dic
     
     Exit Function
 errorhandler:
-    Call LC_UI.ShowError("OpenedBy.XmlHttpSend")
+    Call LC_UI.ShowError("AO_OpenedBy.XmlHttpSend")
 End Function
