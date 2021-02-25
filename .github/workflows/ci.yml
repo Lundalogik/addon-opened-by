@@ -178,7 +178,8 @@ jobs:
   # Anything below this will only run on a push to master
   release:
     name: Build and release
-    needs: [pre-flight, test-python, test-frontend, test-portal]
+    # needs: [pre-flight, test-python, test-frontend, test-portal]
+    needs: [pre-flight]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
