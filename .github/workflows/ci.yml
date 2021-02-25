@@ -47,133 +47,133 @@ jobs:
             print('Add PYPI_LIMECI_PASSWORD to your repo secrets')
             sys.exit(1)
       
-      - name: Check if lock file exists
-        shell: python
-        run: |
-          import os
-          if not os.path.isfile('poetry.lock'):
-            print('Poetry.lock is missing!')
-            os._exit(1)
+      # - name: Check if lock file exists
+      #   shell: python
+      #   run: |
+      #     import os
+      #     if not os.path.isfile('poetry.lock'):
+      #       print('Poetry.lock is missing!')
+      #       os._exit(1)
   
-  # Test and lint Python
-  test-python:
-    name: Test and lint Python
-    if: (!contains(github.event.head_commit.message, '[skip ci]'))
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest ]
-    steps:
-      - uses: actions/checkout@v2
+  # # Test and lint Python
+  # test-python:
+  #   name: Test and lint Python
+  #   if: (!contains(github.event.head_commit.message, '[skip ci]'))
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       os: [ ubuntu-latest ]
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.7
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v1
+  #       with:
+  #         python-version: 3.7
 
-      - name: Install Poetry
-        run: pip install "poetry<1.1.0"
+  #     - name: Install Poetry
+  #       run: pip install "poetry<1.1.0"
 
-      - name: today output
-        id: get_today
-        run: |
-          echo ::set-output name=today::$(python -c "from datetime import date; print(date.today())")
+  #     - name: today output
+  #       id: get_today
+  #       run: |
+  #         echo ::set-output name=today::$(python -c "from datetime import date; print(date.today())")
 
-      - name: Cache Poetry virtualenv
-        uses: actions/cache@v1
-        id: cache
-        with:
-          path: .venv
-          key: poetry-${{ runner.os }}-${{ steps.get_today.outputs.today }}-${{ hashFiles('**/poetry.lock') }}
-      - name: Set Poetry config
-        run: |
-          poetry config repositories.lime https://pypi.lime.tech/simple/
-          poetry config http-basic.lime "${{secrets.PYPI_USERNAME}}" "${{secrets.PYPI_PASSWORD}}"
-      - name: Install dependencies
-        shell: bash
-        run: poetry install 2>&1 | tee install.log
-      - name: Check if lockfile not out of sync
-        shell: bash
-        run: |
-          if grep -q "Warning: The lock file is not up to date with the latest changes in pyproject.toml." install.log; then
-            echo Your pyproject.toml and lockfile is not in sync. Please re-lock
-            exit 1
-          else
-            exit 0
-          fi
-      - run: poetry run flake8
-      - run: poetry run pytest
+  #     - name: Cache Poetry virtualenv
+  #       uses: actions/cache@v1
+  #       id: cache
+  #       with:
+  #         path: .venv
+  #         key: poetry-${{ runner.os }}-${{ steps.get_today.outputs.today }}-${{ hashFiles('**/poetry.lock') }}
+  #     - name: Set Poetry config
+  #       run: |
+  #         poetry config repositories.lime https://pypi.lime.tech/simple/
+  #         poetry config http-basic.lime "${{secrets.PYPI_USERNAME}}" "${{secrets.PYPI_PASSWORD}}"
+  #     - name: Install dependencies
+  #       shell: bash
+  #       run: poetry install 2>&1 | tee install.log
+  #     - name: Check if lockfile not out of sync
+  #       shell: bash
+  #       run: |
+  #         if grep -q "Warning: The lock file is not up to date with the latest changes in pyproject.toml." install.log; then
+  #           echo Your pyproject.toml and lockfile is not in sync. Please re-lock
+  #           exit 1
+  #         else
+  #           exit 0
+  #         fi
+  #     - run: poetry run flake8
+  #     - run: poetry run pytest
   
-  # Test and lint frontend
-  test-frontend:
-    name: Test and lint frontend
-    if: (!contains(github.event.head_commit.message, '[skip ci]'))
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest ]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12
+  # # Test and lint frontend
+  # test-frontend:
+  #   name: Test and lint frontend
+  #   if: (!contains(github.event.head_commit.message, '[skip ci]'))
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       os: [ ubuntu-latest ]
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Use Node.js
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 12
 
-      - name: Check if has frontend
-        id: frontend
-        shell: bash
-        run: |
-          [ -d "frontend" ] && export has_frontend_value=yes || export has_frontend_value=no
-          echo ::set-output name=has_frontend::$has_frontend_value
+  #     - name: Check if has frontend
+  #       id: frontend
+  #       shell: bash
+  #       run: |
+  #         [ -d "frontend" ] && export has_frontend_value=yes || export has_frontend_value=no
+  #         echo ::set-output name=has_frontend::$has_frontend_value
 
-      # NPM Cache
-      - name: Get npm cache directory
-        if: steps.frontend.outputs.has_frontend == 'yes'
-        id: npm-cache
-        run: |
-          echo "::set-output name=dir::$(npm config get cache)"
-      - uses: actions/cache@v1
-        name: Get npm cache
-        if: steps.frontend.outputs.has_frontend == 'yes'
-        with:
-          path: ${{ steps.npm-cache.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - name: Run tests and lint
-        if: steps.frontend.outputs.has_frontend == 'yes'
-        shell: bash
-        run: |
-          cd frontend
-          npm install
-          npm run test
-          npm run lint
-        env:
-          CI: true
+      # # NPM Cache
+      # - name: Get npm cache directory
+      #   if: steps.frontend.outputs.has_frontend == 'yes'
+      #   id: npm-cache
+      #   run: |
+      #     echo "::set-output name=dir::$(npm config get cache)"
+      # - uses: actions/cache@v1
+      #   name: Get npm cache
+      #   if: steps.frontend.outputs.has_frontend == 'yes'
+      #   with:
+      #     path: ${{ steps.npm-cache.outputs.dir }}
+      #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-node-
+      # - name: Run tests and lint
+      #   if: steps.frontend.outputs.has_frontend == 'yes'
+      #   shell: bash
+      #   run: |
+      #     cd frontend
+      #     npm install
+      #     npm run test
+      #     npm run lint
+      #   env:
+      #     CI: true
 
-  test-portal:
-    name: Portal
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - name: npm ci
-        working-directory: ./portal
-        run: |
-          GITHUB_TOKEN="${{ secrets.READ_PRIVATE_GITHUB_PACKAGES }}" ./generate_npmrc.sh
-          npm ci
-          rm .npmrc
-      - name: lint
-        working-directory: ./portal
-        run: npm run lint
-      - name: build
-        working-directory: ./portal
-        run: npm run build
-      - name: test
-        working-directory: ./portal
-        run: npm run test
+  # test-portal:
+  #   name: Portal
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 12.x
+  #     - name: npm ci
+  #       working-directory: ./portal
+  #       run: |
+  #         GITHUB_TOKEN="${{ secrets.READ_PRIVATE_GITHUB_PACKAGES }}" ./generate_npmrc.sh
+  #         npm ci
+  #         rm .npmrc
+  #     - name: lint
+  #       working-directory: ./portal
+  #       run: npm run lint
+  #     - name: build
+  #       working-directory: ./portal
+  #       run: npm run build
+  #     - name: test
+  #       working-directory: ./portal
+  #       run: npm run test
 
   # Anything below this will only run on a push to master
   release:
