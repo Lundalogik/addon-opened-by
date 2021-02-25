@@ -1,0 +1,55 @@
+name: Attach lip.json on published release and update docs/changelog.md
+
+on:
+  repository_dispatch:
+    types: [new-release]
+
+jobs:
+  attach-lip-asset:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+            python-version: '3.7'
+      - run: pip install -r ci/requirements.txt
+      - run: python ci/toolbox.py set-env-from-gh-release-api addon-opened-by ${{ github.event.client_payload.package_version }}
+        env:
+          DISPATCH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+      - name: update version in json
+        uses: rfennell/JSONFileVersioner@v1
+        with:
+          path: 'legacy/lip'
+          field: 'addonVersion'
+          VersionNumber: ${{ github.event.client_payload.package_version }}
+          filenamepattern: '.json'
+      - name: zip legacy/lip folder content
+        run: cd legacy/lip/; zip -r ../../temp-lip-asset *; cd ../../
+      - name: upload legacy/lip zip
+        uses: actions/upload-release-asset@v1
+        env:
+            GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+        with:
+          upload_url: ${{ env.RELEASE_UPLOAD_URL }}
+          asset_path: ./temp-lip-asset.zip
+          asset_name: lip-${{ github.event.repository.name }}-${{ github.event.client_payload.package_version }}.zip
+          asset_content_type: application/zip
+
+  update-changelog-in-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+            python-version: '3.7'
+      - run: pip install -r ci/requirements.txt
+      - run: python ci/toolbox.py update-docs-changelog """${{ github.event.client_payload.release_notes }}"""
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+      - name: commit
+        run: |
+          git add docs/changelog.md
+          git commit -m "docs: update changelog to version ${{ github.event.client_payload.package_version }}"
+          git push origin master
