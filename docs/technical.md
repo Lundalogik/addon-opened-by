@@ -1,15 +1,12 @@
-hero: *Short and snappy description of the value the add-on brings. Use same text for all .md files.*
+hero: Get a warning when trying to open a card that someone else already has open.
 
 # Technical
 
 ## Components
 
-*Which components have been used to build this add-on? Custom endpoints, Custom limeobject, VBA, LBS app etc.*
+* VBA
+* Lime CRM REST API
 
 ### Table and Field Definitions Lime CRM
 
-*Any data structure that is expected to exist or is added?*
-
-### Component 1
-
-*Describe each component under a separate section.*
+A new table (openedby) will be added.

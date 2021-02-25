@@ -1,13 +1,11 @@
-hero: *Short and snappy description of the value the add-on brings. Use same text for all .md files.*
+hero: Get a warning when trying to open a card that someone else already has open.
 
 # Opened By
 
-*A brief, selling and non-technical, overview in just a few sentences.*
+For certain lime objects it is valuable to know if someone else has the same record open. For example to avoid that two coworkes are working on the same helpdesk ticket without knowing it. With Opened By you get a warning or records are locked when opened by someone else.
 
 ## Features
 
 A brief summary of what the add-on can do for you:
 
-* *Feature 1*
-* *Feature 2*
-* *...*
+* Give a warning or lock records when opened by someone else.

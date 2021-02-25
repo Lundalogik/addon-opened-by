@@ -1,0 +1,160 @@
+{
+    "install":{
+      "tables":[
+        {
+          "name":"openedby",
+          "localname":"\u00D6ppet av",
+          "invisible":"2",
+          "attributes":{
+            "tableorder":"65",
+            "invisible":"2",
+            "syscomment":"",
+            "label":"0",
+            "log":"0",
+            "actionpad":""
+          },
+          "localname_singular":{
+            "sv":"\u00D6ppet av",
+            "en_us":"Opened by"
+          },
+          "localname_plural":{
+            "sv":"\u00D6ppet av",
+            "en_us":"Opened by"
+          },
+          "fields":[
+            {
+              "table":"openedby",
+              "name":"tablename",
+              "localname":{
+                "sv":"Tabellnamn",
+                "en_us":"Table name"
+              },
+              "attributes":{
+                "relationtab":"0",
+                "fieldtype":"string",
+                "limereadonly":"0",
+                "invisible":"0",
+                "required":"0",
+                "width":"0",
+                "height":"0",
+                "length":"32",
+                "limerequiredforedit":"0",
+                "newline":"2",
+                "fieldorder":"1",
+                "isnullable":"0",
+                "formatsql":"1",
+                "label":"0",
+                "adlabel":"0"
+              }
+            },
+            {
+              "table":"openedby",
+              "name":"recordid",
+              "localname":{
+                "sv":"Postid",
+                "en_us":"Post id"
+              },
+              "attributes":{
+                "relationtab":"0",
+                "fieldtype":"integer",
+                "limereadonly":"0",
+                "invisible":"0",
+                "required":"0",
+                "width":"0",
+                "height":"0",
+                "defaultvalue":"0",
+                "limerequiredforedit":"0",
+                "newline":"2",
+                "fieldorder":"2",
+                "isnullable":"0",
+                "type":"2",
+                "formatsql":"1",
+                "label":"0"
+              }
+            },
+            {
+              "table":"openedby",
+              "name":"iduser",
+              "localname":{
+                "sv":"Anv\u00E4ndarid",
+                "en_us":"User id"
+              },
+              "attributes":{
+                "relationtab":"0",
+                "fieldtype":"integer",
+                "limereadonly":"0",
+                "invisible":"0",
+                "required":"0",
+                "width":"0",
+                "height":"0",
+                "defaultvalue":"0",
+                "limerequiredforedit":"0",
+                "newline":"2",
+                "fieldorder":"3",
+                "isnullable":"0",
+                "type":"2",
+                "formatsql":"1",
+                "label":"0"
+              }
+            },
+            {
+              "table":"openedby",
+              "name":"name",
+              "localname":{
+                "sv":"Namn",
+                "en_us":"Name"
+              },
+              "attributes":{
+                "relationtab":"0",
+                "fieldtype":"string",
+                "limereadonly":"0",
+                "invisible":"0",
+                "required":"0",
+                "width":"0",
+                "height":"0",
+                "length":"32",
+                "limerequiredforedit":"0",
+                "newline":"2",
+                "fieldorder":"4",
+                "isnullable":"0",
+                "formatsql":"1",
+                "label":"0",
+                "adlabel":"0"
+              }
+            }
+          ]
+        }
+      ],
+      "localize":[
+        {
+          "owner":"AO_OpenedBy",
+          "code":"i_openedbymessage",
+          "context":"When you open a post which someone else has opened you get a warning message",
+          "sv":"Posten \u00E4r redan \u00F6ppen av %1. Vill du \u00E4nd\u00E5 \u00F6ppna posten?",
+          "en_us":"The record is already opened by %1. Do you want to open the record anyway?",
+          "fi":"",
+          "no":"",
+          "da":""
+        },
+        {
+          "owner":"AO_OpenedBy",
+          "code":"i_blockedopenedby",
+          "context":"If you choose to block opening of posts then this is the message shown",
+          "sv":"Posten \u00E4r redan \u00F6ppen av %1 och kan d\u00E4rf\u00F6r inte \u00F6ppnas.",
+          "en_us":"The record is already opened by %1 and thus cannot be opened.",
+          "fi":"",
+          "no":"",
+          "da":""
+        }
+      ],
+      "vba":[
+        {
+          "name":"AO_OpenedBy",
+          "relPath":"vba\\AO_OpenedBy.bas"
+        }
+      ]
+    },
+    "createdWithLIPPackageBuilderVersion":"2.1.0",
+    "uniqueName":"asdas",
+    "addonVersion":""
+  }
