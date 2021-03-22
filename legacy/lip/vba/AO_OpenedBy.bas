@@ -140,7 +140,7 @@ Sub RemoveOpenedBy(sRecordId As String, sTableName As String)
             
                 deleteurl = sUrlBase & ID & "/"
         
-                sResponse = OpenedBy.XmlHttpSend("DELETE", deleteurl, Nothing)
+                sResponse = AO_OpenedBy.XmlHttpSend("DELETE", deleteurl, Nothing)
             Next
         End If
     End If
