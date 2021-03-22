@@ -36,7 +36,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Run csp_
 		@retry_attempts=0, 
 		@retry_interval=0, 
 		@os_run_priority=0, @subsystem=N'TSQL', 
-		@command=N'EXEC csp_clear_openedby', 
+		@command=N'EXEC csp_addon_openedby_clear_openedby', 
 		@database_name=N'<ENTER DATABASE NAME HERE>', 
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
@@ -53,8 +53,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobschedule @job_id=@jobId, @name=N'Once ever
 		@active_start_date=20210209, 
 		@active_end_date=99991231, 
 		@active_start_time=0, 
-		@active_end_time=235959, 
-		@schedule_uid=N'525dbf06-4dc9-45b6-82c4-974b746cef39'
+		@active_end_time=235959
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_add_jobserver @job_id = @jobId, @server_name = N'(local)'
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
