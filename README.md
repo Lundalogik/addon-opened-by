@@ -31,6 +31,9 @@ Private Sub m_Application_AfterActiveInspectorChanged()
 
 HelpdeskInspectorHandler:
 ```
+(General) (Declarations)
+Private m_tagName As String
+
 Private Sub m_Inspector_AfterClose()
     Disconnect
 End Sub
