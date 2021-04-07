@@ -5,7 +5,6 @@ An add-on for handling warnings/locks when records are opened by someone else. O
 Only works in the desktop client. 
 
 Is cloud compatible.
-<<<<<<< HEAD
 
 ## Prerequisites
 To make OpenedBy work properly the handling of GeneralInspectorHandler and HelpdeskInspectorHandler(or ) need to be written in a certain manner. Use the following example as guide:
@@ -110,5 +109,3 @@ In Cloud this is not possible so there is a VBA method, CleanUpExpired, which cl
 The OpenedBy table should also be visible for administrators (it is by default) so that they can remove records manually if needed.
 
 
-=======
->>>>>>> a0cea4bb2ca523f7b208cf90ccbddd8f66bdb40c
