@@ -251,21 +251,21 @@ jobs:
       #   working-directory: ./portal
       #   run: |
       #     GITHUB_TOKEN="${{ secrets.READ_PRIVATE_GITHUB_PACKAGES }}" ./generate_npmrc.sh
-      - name: Create a new release and bump version
-        id: semantic
-        uses: cycjimmy/semantic-release-action@v2
-        with:
-          extends: '@limetech/semantic-release-lime-buildtools'
-          branches: |
-            [
-              "main",
-              "master",
-              {"name": "dev", "prerelease": true}
-            ]
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYPI_USERNAME: ${{ secrets.PYPI_LIMECI_USERNAME }}
-          PYPI_PASSWORD: ${{ secrets.PYPI_LIMECI_PASSWORD }}
+      # - name: Create a new release and bump version
+      #   id: semantic
+      #   uses: cycjimmy/semantic-release-action@v2
+      #   with:
+      #     extends: '@limetech/semantic-release-lime-buildtools'
+      #     branches: |
+      #       [
+      #         "main",
+      #         "master",
+      #         {"name": "dev", "prerelease": true}
+      #       ]
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     PYPI_USERNAME: ${{ secrets.PYPI_LIMECI_USERNAME }}
+      #     PYPI_PASSWORD: ${{ secrets.PYPI_LIMECI_PASSWORD }}
 
       # Release event (LIP attachment and docs/changelog.md update)
       - name: Release event
