@@ -119,10 +119,10 @@ jobs:
         run: |
           pip install lime-buildtools -i https://${{secrets.PYPI_USERNAME}}:${{secrets.PYPI_PASSWORD}}@pypi.lime.tech/simple
       # Create new release
-      - name: configure github private package npm
-        working-directory: ./portal
-        run: |
-          GITHUB_TOKEN="${{ secrets.READ_PRIVATE_GITHUB_PACKAGES }}" ./generate_npmrc.sh
+      # - name: configure github private package npm
+      #   working-directory: ./portal
+      #   run: |
+      #     GITHUB_TOKEN="${{ secrets.READ_PRIVATE_GITHUB_PACKAGES }}" ./generate_npmrc.sh
       - name: Create a new release and bump version
         id: semantic
         uses: cycjimmy/semantic-release-action@v2
