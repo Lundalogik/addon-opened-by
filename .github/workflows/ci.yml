@@ -52,10 +52,7 @@ jobs:
   semantic-release:
     name: Run Semantic Release
     needs: [pre-flight]
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest ]
+    runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v2
@@ -76,27 +73,27 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip
       
-      - name: Check if has frontend
-        id: frontend
-        shell: bash
-        run: |
-          [ -d "frontend" ] && export has_frontend_value=yes || export has_frontend_value=no
-          echo ::set-output name=has_frontend::$has_frontend_value
+      # - name: Check if has frontend
+      #   id: frontend
+      #   shell: bash
+      #   run: |
+      #     [ -d "frontend" ] && export has_frontend_value=yes || export has_frontend_value=no
+      #     echo ::set-output name=has_frontend::$has_frontend_value
       
       # NPM Cache
-      - name: Get npm cache directory
-        if: steps.frontend.outputs.has_frontend == 'yes'
-        id: npm-cache
-        run: |
-          echo "::set-output name=dir::$(npm config get cache)"
-      - uses: actions/cache@v1
-        name: Get npm cache
-        if: steps.frontend.outputs.has_frontend == 'yes'
-        with:
-          path: ${{ steps.npm-cache.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      # - name: Get npm cache directory
+      #   if: steps.frontend.outputs.has_frontend == 'yes'
+      #   id: npm-cache
+      #   run: |
+      #     echo "::set-output name=dir::$(npm config get cache)"
+      # - uses: actions/cache@v1
+      #   name: Get npm cache
+      #   if: steps.frontend.outputs.has_frontend == 'yes'
+      #   with:
+      #     path: ${{ steps.npm-cache.outputs.dir }}
+      #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-node-
       
       - name: Install Poetry
         run: pip install "poetry<1.1.0"
@@ -127,6 +124,7 @@ jobs:
         id: semantic
         uses: cycjimmy/semantic-release-action@v2
         with:
+          semantic_version: 17.1.2
           # extends: '@limetech/semantic-release-lime-buildtools'
           branches: |
             [
@@ -134,10 +132,14 @@ jobs:
               "master",
               {"name": "dev", "prerelease": true}
             ]
+          extra_plugins: |
+            @semantic-release/changelog@5.0.1
+            @semantic-release/git@9.0.0
+            conventional-changelog-conventionalcommits@4.4.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYPI_USERNAME: ${{ secrets.PYPI_LIMECI_USERNAME }}
-          PYPI_PASSWORD: ${{ secrets.PYPI_LIMECI_PASSWORD }}
+          # PYPI_USERNAME: ${{ secrets.PYPI_LIMECI_USERNAME }}
+          # PYPI_PASSWORD: ${{ secrets.PYPI_LIMECI_PASSWORD }}
 
       # Release event (LIP attachment and docs/changelog.md update)
       - name: Release event
