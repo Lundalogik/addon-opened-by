@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.0.3
+
+**Released:** 2021-07-01
+
+### Bug Fixes
+
+* trigger new release
+
 ## v1.0.2
 
 **Released:** 2021-07-01
