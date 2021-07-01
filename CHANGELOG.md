@@ -1,3 +1,10 @@
+### [1.0.3](https://github.com/Lundalogik/addon-opened-by/compare/v1.0.2...v1.0.3) (2021-07-01)
+
+
+### Bug Fixes
+
+* trigger new release ([4b68729](https://github.com/Lundalogik/addon-opened-by/commit/4b68729964d7ee76e1db4e0b3f6ac0a6665985f8))
+
 ### [1.0.2](https://github.com/Lundalogik/addon-opened-by/compare/v1.0.1...v1.0.2) (2021-07-01)
 
 
