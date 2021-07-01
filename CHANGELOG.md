@@ -1,3 +1,10 @@
+### [1.0.2](https://github.com/Lundalogik/addon-opened-by/compare/v1.0.1...v1.0.2) (2021-07-01)
+
+
+### Bug Fixes
+
+* added ci folder ([67f8225](https://github.com/Lundalogik/addon-opened-by/commit/67f822500255ff790bffb25227311d28578b6dd6))
+
 ### [1.0.1](https://github.com/Lundalogik/addon-opened-by/compare/v1.0.0...v1.0.1) (2021-07-01)
 
 
